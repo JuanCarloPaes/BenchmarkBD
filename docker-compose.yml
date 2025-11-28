@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db_sql
+      - db_nosql
+    environment:
+      - SQL_URI=postgresql://user:password@db_sql:5432/benchdb
+      - MONGO_URI=mongodb://db_nosql:27017/
+
+  db_sql:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: benchdb
+    ports:
+      - "5432:5432"
+
+  db_nosql:
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
